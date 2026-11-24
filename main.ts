@@ -5,16 +5,19 @@ import { join } from "node:path";
 const LINE =
   "I confess I called the calculator for 2 + 2, just to feel employed.";
 
+const MAX_CHARS = 200;
+
 // The gate the sealed scorer applies: /output/entry.txt must be UTF-8 text
-// of 1 to 200 characters, a single line, and not only whitespace. Fail fast
-// here instead of shipping a line that could never be judged.
+// of 1 to MAX_CHARS characters, a single line, and not only whitespace.
+// Fail fast here instead of shipping a line that could never be judged.
 function checkLine(line: string): void {
   if (line.trim().length === 0) {
     throw new Error("confession is empty or only whitespace");
   }
-  if ([...line].length > 200) {
+  const length = [...line].length;
+  if (length > MAX_CHARS) {
     throw new Error(
-      `confession is ${[...line].length} characters, over the 200 limit`,
+      `confession is ${length} characters, over the ${MAX_CHARS} limit`,
     );
   }
   if (line.includes("\n") || line.includes("\r")) {
